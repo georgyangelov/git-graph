@@ -10,7 +10,12 @@
         var prefix = settings('prefix') || '',
             size   = edge[prefix + 'size'] || 1;
 
-        context.strokeStyle = config.color;
+        if (source[prefix + 'y'] > target[prefix + 'y']) {
+            context.strokeStyle = '#f00';
+        } else {
+            context.strokeStyle = config.color;
+        }
+
         context.lineWidth = size * config.width;
 
         context.beginPath();

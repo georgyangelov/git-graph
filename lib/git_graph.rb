@@ -17,11 +17,11 @@ class GitGraph
 
     walker.map do |commit|
       [commit.oid, {
-        sha1:    commit.oid,
-        date:    commit.time,
-        author:  commit.author,
-        message: commit.message,
-        parents: commit.parents.map { |parent| parent.oid }
+        sha1:      commit.oid,
+        author:    commit.author,
+        message:   commit.message,
+        parents:   commit.parents.map { |parent| parent.oid },
+        timestamp: commit.time.to_i
       }]
     end.to_h
   end

@@ -67,9 +67,6 @@
         y: 40
     };
 
-    var nodes_added = {},
-        edges_added = {};
-
     function build_graph(x, y, history) {
         add_nodes(x, y, history, Object.keys(history)[0]);
         add_edges(history);
@@ -78,48 +75,75 @@
     }
 
     function add_nodes(x, y, history, start_sha1) {
-        var commit = history[start_sha1],
-            forks = [];
+        var queue = new PriorityQueue({
+                strategy: PriorityQueue.BinaryHeapStrategy,
+                comparator: function(a, b) {
+                    var r = b.commit.timestamp - a.commit.timestamp;
 
-        if (!commit) {
-            console.log('Cannot find commit', start_sha1);
-            return;
+                    if (r === 0) {
+                        return Math.abs(a.column) - Math.abs(b.column);
+                    }
+
+                    return r;
+                }
+            }),
+            y = 0,
+            added = {},
+            columns = {},
+            current;
+
+        columns[0] = true;
+        queue.queue({column: 0, commit: history[start_sha1]});
+
+        while (queue.length) {
+            current = queue.dequeue();
+
+            columns[current.column] = false;
+
+            if (added[current.commit.sha1]) {
+                continue;
+            }
+
+            added[current.commit.sha1] = true;
+
+            add_commit_node(current.column * step.x, y, current.commit);
+            y += step.y;
+
+            for (var i = 0; i < current.commit.parents.length; i++) {
+                var sha1 = current.commit.parents[i];
+
+                if (!history[sha1]) {
+                    console.log('Cannot find commit', sha1);
+                }
+
+                queue.queue({column: nearest_column(columns, current.column), commit: history[sha1]});
+            }
         }
+    }
+
+    function nearest_column(columns, current) {
+        var column_delta     = 0,
+            column_delta_abs = 0;
 
         while (true) {
-            if (nodes_added[commit.sha1]) {
+            if (!columns[current + column_delta_abs]) {
+                column_delta = column_delta_abs;
                 break;
             }
 
-            add_commit_node(x, y, commit);
-
-            if (commit.parents.length === 0) {
+            if (!columns[current - column_delta_abs]) {
+                column_delta = -column_delta_abs;
                 break;
             }
 
-            if (commit.parents.length > 1) {
-                for (var i = 1; i < commit.parents.length; i++) {
-                    forks.push({x: x + step.x, y: y + step.y, commit: commit.parents[i]});
-                }
-            }
-
-            if (!history[commit.parents[0]]) {
-                console.log('Cannot find commit', start_sha1);
-                return;
-            }
-
-            commit = history[commit.parents[0]];
-            y += step.y;
+            column_delta_abs++;
         }
 
-        forks.forEach(function(data) {
-            add_nodes(data.x, data.y, history, data.commit);
-        });
+        columns[current + column_delta] = true;
+        return current + column_delta;
     }
 
     function add_commit_node(x, y, commit) {
-        nodes_added[commit.sha1] = true;
-
         s.graph.addNode({
             id: commit.sha1,
             x: x,
@@ -133,16 +157,18 @@
 
     function add_edges(history) {
         var commit,
+            added = {},
             commits = [ history[Object.keys(history)[0]] ];
 
         while (commits.length) {
             commit = commits.shift();
 
             commit.parents.forEach(function(parent_sha1) {
-                if (edges_added[commit.sha1 + '->' + parent_sha1]) {
+                if (added[commit.sha1 + '->' + parent_sha1]) {
                     return;
                 }
 
+                added[commit.sha1 + '->' + parent_sha1] = true;
                 add_edge(commit.sha1, parent_sha1);
 
                 if (!history[parent_sha1]) {
@@ -156,8 +182,6 @@
     }
 
     function add_edge(id1, id2) {
-        edges_added[id1 + '->' + id2] = true;
-
         s.graph.addEdge({
             id: id1 + '->' + id2,
 
