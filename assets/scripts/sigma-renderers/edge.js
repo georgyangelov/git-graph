@@ -3,7 +3,7 @@
 
     var config = {
         color: '#000',
-        width: 0.1
+        width: 1
     };
 
     window.sigma.canvas.edges.def = function(edge, source, target, context, settings) {

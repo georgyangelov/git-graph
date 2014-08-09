@@ -2,6 +2,7 @@
 
 require_relative '../lib/git_graph.rb'
 
+require 'json'
 require 'sinatra'
 require 'sinatra-websocket'
 
@@ -14,8 +15,10 @@ set :views,         Proc.new { root }
 
 set :sockets, []
 
+git_graph = GitGraph.new File.join(File.dirname(__FILE__), '../test/coursekicker')
 
 get '/' do
+  # git_graph.history ['832a5c7c057abd10974b65386702e8a4de3d3ec6']
   # if !request.websocket?
     erb :index
   # else
@@ -35,4 +38,6 @@ get '/' do
   # end
 end
 
-get
+get '/history.json' do
+  git_graph.history(['HEAD']).to_json
+end

@@ -4,8 +4,10 @@
     var config = {
         strokeColor: '#000',
         strokeSize:  0.1,
-        fillColor:   '#fff',
-        padding: 0.1,
+        padding:     0.1,
+
+        normalColor: '#fff',
+        mergeColor:  '#e00',
 
         fontFamily: 'Arial',
         centerTextSize: 0.3,
@@ -21,7 +23,11 @@
             height  = size,
             padding = config.padding * size;
 
-        context.fillStyle = config.fillColor;
+        if (node.data.parents.length > 1) {
+            context.fillStyle = config.mergeColor;
+        } else {
+            context.fillStyle = config.normalColor;
+        }
 
         context.strokeStyle = config.strokeColor;
         context.setLineWidth(config.strokeSize * size);
