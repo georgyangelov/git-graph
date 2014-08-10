@@ -27,11 +27,18 @@ class GitGraph
   end
 
   def branches
-    @repository.branches.each_name(:local).to_a
+    @repository.branches.each_name().to_a - ['origin/HEAD']
   end
 
   def resolve_commits(references)
     references.map do |reference|
+      head = false
+
+      if reference == 'HEAD'
+        reference = @repository.head.target_id
+        head = true
+      end
+
       if @repository.branches[reference]
         object = @repository.lookup @repository.branches[reference].target_id
       else
@@ -43,6 +50,10 @@ class GitGraph
         commit = object
       when :tag
         commit = Rugged::Commit.lookup @repository, target
+      end
+
+      if head
+        next ['HEAD', {type: :head, target: commit.oid}]
       end
 
       if @repository.branches[reference]

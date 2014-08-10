@@ -43,5 +43,5 @@ get '/history.json' do
 end
 
 get '/refs.json' do
-  git_graph.resolve_commits(git_graph.branches).to_json
+  git_graph.resolve_commits(['HEAD'] + git_graph.branches).to_json
 end

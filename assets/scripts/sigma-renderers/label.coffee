@@ -2,16 +2,14 @@ class LabelRenderer
   config =
     stroke_color: '#000'
     stroke_size:  0.1
-    padding:      0.1
+    padding:      0
 
-    normal_color: '#fff'
-    merge_color:  '#e00'
+    normal_color: '#0e0'
+    remote_color: '#cfc'
+    head_color:   '#ee0'
 
     font_family:      'Arial'
     center_text_size:  0.3
-    message_text_size: 0.1
-    line_height:       1.3
-    sha1_cutoff:       7
 
     details_size: 70
 
@@ -20,13 +18,21 @@ class LabelRenderer
     size    = node[prefix + 'size']
     x       = node[prefix + 'x']
     y       = node[prefix + 'y']
-    width   = size * 2
+    width   = size * 2.5
     height  = size
     padding = config.padding * size
 
-    context.fillStyle   = '#0f0' #config.normal_color
+    remote = node.data.name.indexOf('/') > 0
+
+    context.fillStyle = if node.data.type == 'head'
+                          config.head_color
+                        else if remote
+                          config.remote_color
+                        else
+                          config.normal_color
+
     context.strokeStyle = config.stroke_color
-    context.setLineWidth config.stroke_size * size
+    context.setLineWidth  config.stroke_size * size
 
     @render_small context, x, y, width, height, size, padding, node
 
@@ -45,7 +51,7 @@ class LabelRenderer
     context.fill()
 
     @render_text context,
-                node.data.name,
+                node.data.name[node.data.name.lastIndexOf('/')+1..],
                 config.center_text_size * size,
                 x,
                 y,

@@ -2,7 +2,7 @@ class GitGraph
   config =
     step:
       x: 40 * 3
-      y: 40
+      y: 50
 
   constructor: (@container) ->
     @sigma = new sigma
