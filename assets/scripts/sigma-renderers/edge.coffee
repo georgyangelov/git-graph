@@ -5,17 +5,24 @@ class EdgeRenderer
     width:         1
 
   render: (edge, source, target, context, settings) =>
-    prefix = settings 'prefix' || ''
-    size   = edge[prefix + 'size'] || 1
-    start  =
+    prefix   = settings 'prefix' || ''
+    size     = edge[prefix + 'size'] || 1
+
+    start =
       x: source[prefix + 'x']
       y: source[prefix + 'y']
-    end    =
+
+    end =
       x: target[prefix + 'x']
       y: target[prefix + 'y']
 
+    inverted = start.y > end.y
+
+    start.y += source[prefix + 'size'] / 2 * if inverted then -1 else 1
+    end.y   -= target[prefix + 'size'] / 2 * if inverted then -1 else 1
+
     context.strokeStyle = config.color
-    context.strokeStyle = config.reverse_color if start.y > end.y
+    context.strokeStyle = config.reverse_color if inverted
     context.lineWidth   = size * config.width
 
     context.beginPath()
@@ -25,4 +32,4 @@ class EdgeRenderer
 
     context.stroke()
 
-window.sigma.canvas.nodes.commit = (new EdgeRenderer).render
+window.sigma.canvas.edges.def = (new EdgeRenderer).render
