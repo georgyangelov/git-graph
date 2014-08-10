@@ -21,6 +21,8 @@ class GitGraph
         nodesPowRatio: 0.9
         edgesPowRatio: 1
 
+    @history_trace = new Interactions.HistoryTrace @sigma
+
   load: ->
     $.getJSON 'history.json', (history) =>
       $.getJSON 'refs.json', (labels) =>

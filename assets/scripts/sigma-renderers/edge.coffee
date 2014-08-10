@@ -1,7 +1,8 @@
 class EdgeRenderer
   config =
-    color:         '#000'
-    reverse_color: '#f00'
+    color:           '#000'
+    reverse_color:   '#f00'
+    highlight_color: '#aa0'
     width:         1
 
   render: (edge, source, target, context, settings) =>
@@ -23,7 +24,8 @@ class EdgeRenderer
       end.y   -= target[prefix + 'size'] / 2 * if inverted then -1 else 1
 
     context.strokeStyle = config.color
-    context.strokeStyle = config.reverse_color if inverted
+    context.strokeStyle = config.reverse_color   if inverted
+    context.strokeStyle = config.highlight_color if source.highlight
     context.lineWidth   = size * config.width
 
     context.beginPath()

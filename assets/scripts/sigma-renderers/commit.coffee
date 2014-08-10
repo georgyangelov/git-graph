@@ -4,8 +4,10 @@ class CommitRenderer
     stroke_size:  0.1
     padding:      0.1
 
-    normal_color: '#fff'
-    merge_color:  '#e00'
+    normal_color:          '#fff'
+    merge_color:           '#e99'
+    highlight_color:       '#ee0'
+    highlight_merge_color: '#fa0'
 
     font_family:      'Arial'
     center_text_size:  0.3
@@ -34,7 +36,12 @@ class CommitRenderer
       @render_detailed context, x, y, width, height, size, padding, node
 
   render_small: (context, x, y, width, height, size, padding, node) ->
-    context.fillStyle = config.merge_color if node.data.parents.length > 1
+    if node.data.parents.length > 1 and node.highlight
+      context.fillStyle = config.highlight_merge_color
+    else if node.data.parents.length > 1
+      context.fillStyle = config.merge_color
+    else if node.highlight
+      context.fillStyle = config.highlight_color
 
     context.beginPath()
     context.rect x - width / 2,
@@ -54,7 +61,12 @@ class CommitRenderer
                 width - padding * 2
 
   render_detailed: (context, x, y, width, height, size, padding, node) ->
-    context.strokeStyle = config.merge_color if node.data.parents.length > 1
+    if node.data.parents.length > 1 and node.highlight
+      context.strokeStyle = config.highlight_merge_color
+    else if node.data.parents.length > 1
+      context.strokeStyle = config.merge_color
+    else if node.highlight
+      context.strokeStyle = config.highlight_color
 
     context.beginPath()
     context.rect x - width / 2,
