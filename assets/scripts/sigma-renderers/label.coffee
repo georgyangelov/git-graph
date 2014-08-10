@@ -7,6 +7,7 @@ class LabelRenderer
     normal_color: '#0e0'
     remote_color: '#cfc'
     head_color:   '#ee0'
+    tag_color:    '#61caff'
 
     font_family:      'Arial'
     center_text_size:  0.3
@@ -22,12 +23,12 @@ class LabelRenderer
     height  = size
     padding = config.padding * size
 
-    remote = node.data.name.indexOf('/') > 0
-
     context.fillStyle = if node.data.type == 'head'
                           config.head_color
-                        else if remote
+                        else if node.data.name.indexOf('/') > 0
                           config.remote_color
+                        else if node.data.type == 'tag'
+                          config.tag_color
                         else
                           config.normal_color
 

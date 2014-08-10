@@ -27,7 +27,9 @@ class GitGraph
   end
 
   def branches
-    @repository.branches.each_name().to_a - ['origin/HEAD']
+    @repository.branches.each_name().to_a +
+    @repository.tags.each_name().to_a -
+    ['origin/HEAD']
   end
 
   def resolve_commits(references)
@@ -41,6 +43,8 @@ class GitGraph
 
       if @repository.branches[reference]
         object = @repository.lookup @repository.branches[reference].target_id
+      elsif @repository.tags[reference]
+        object = @repository.lookup @repository.tags[reference].target_id
       else
         object = @repository.lookup reference
       end
@@ -58,10 +62,11 @@ class GitGraph
 
       if @repository.branches[reference]
         [reference, {type: :branch, target: commit.oid}]
-      elsif object.type == :tag
+      elsif @repository.tags[reference]
         [reference, {type: :tag,    target: commit.oid}]
       else
         raise 'Unknown reference object'
+        p object
       end
     end.to_h
   end
