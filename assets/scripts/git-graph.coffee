@@ -23,16 +23,19 @@ class GitGraph
 
   load: ->
     $.getJSON 'history.json', (history) =>
-      $.getJSON 'refs.json', (start_commits) =>
-        @import history, start_commits
+      $.getJSON 'refs.json', (labels) =>
+        @import history, labels
 
-  import: (history, start_commits) =>
-    nodes = new SigmaNodeImport @sigma, history
-    edges = new SigmaEdgeImport @sigma, history
+  import: (history, refs) =>
+    nodes  = new SigmaNodeImport  @sigma, history
+    labels = new SigmaLabelImport @sigma
+    edges  = new SigmaEdgeImport  @sigma, history
 
-    console.log(start_commits)
-    nodes.import 0, 0, config.step.x, config.step.y, start_commits
-    edges.import 0, 0, config.step.x, config.step.y, start_commits
+    start_commits = (target for name, {target} of refs)
+
+    nodes.import  0, 0, config.step.x, config.step.y, start_commits
+    labels.import refs
+    edges.import  0, 0, config.step.x, config.step.y, start_commits
 
     @sigma.refresh()
 

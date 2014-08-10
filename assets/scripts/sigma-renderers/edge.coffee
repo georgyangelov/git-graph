@@ -18,8 +18,9 @@ class EdgeRenderer
 
     inverted = start.y > end.y
 
-    start.y += source[prefix + 'size'] / 2 * if inverted then -1 else 1
-    end.y   -= target[prefix + 'size'] / 2 * if inverted then -1 else 1
+    if source.type != 'label'
+      start.y += source[prefix + 'size'] / 2 * if inverted then -1 else 1
+      end.y   -= target[prefix + 'size'] / 2 * if inverted then -1 else 1
 
     context.strokeStyle = config.color
     context.strokeStyle = config.reverse_color if inverted

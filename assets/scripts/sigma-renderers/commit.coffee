@@ -82,6 +82,7 @@ class CommitRenderer
     context.font      = "#{size}pt #{config.font_family}"
     context.fillStyle = '#000'
     context.textAlign = 'center'
+    context.textBaseline = 'alphabetic'
 
     height = lines.length * size * config.line_height
 

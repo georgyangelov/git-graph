@@ -45,7 +45,13 @@ class GitGraph
         commit = Rugged::Commit.lookup @repository, target
       end
 
-      commit.oid
-    end
+      if @repository.branches[reference]
+        [reference, {type: :branch, target: commit.oid}]
+      elsif object.type == :tag
+        [reference, {type: :tag,    target: commit.oid}]
+      else
+        raise 'Unknown reference object'
+      end
+    end.to_h
   end
 end
