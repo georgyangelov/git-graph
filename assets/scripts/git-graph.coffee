@@ -1,5 +1,6 @@
 class GitGraph
   config =
+    initial_zoom: 0.5
     step:
       x: 40 * 3
       y: 50
@@ -40,6 +41,14 @@ class GitGraph
     edges.import  0, 0, config.step.x, config.step.y, start_commits
 
     @sigma.refresh()
+
+    @zoom_to @sigma.graph.nodes(labels.get_id('HEAD'))
+
+  zoom_to: (node) ->
+    camera = @sigma.cameras[0]
+    prefix = camera.readPrefix
+
+    camera.goTo x: node[prefix + 'x'], y: node[prefix + 'y'], ratio: config.initial_zoom
 
 window.git_graph = new GitGraph document.getElementById('container')
 window.git_graph.load()

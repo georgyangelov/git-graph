@@ -30,7 +30,7 @@ class SigmaLabelImport
       commit.data.labels.push node
 
   add_label: (x, y, name, target, type) ->
-    id = "label-#{name}->#{target}"
+    id = @get_id name
 
     node = @sigma.graph.addNode
       id: id
@@ -50,5 +50,7 @@ class SigmaLabelImport
       size: 1
 
     node
+
+  get_id: (name) -> "label-#{name}"
 
 window.SigmaLabelImport = SigmaLabelImport
