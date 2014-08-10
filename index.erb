@@ -12,9 +12,16 @@
         <script src="scripts/sigmajs/sigma.min.js"></script>
         <script src="scripts/sigmajs/plugins/sigma.parsers.json.min.js"></script>
         <script src="scripts/priority-queue.no-require.min.js"></script>
-        <script src="scripts/sigma-renderers/edge.js"></script>
-        <script src="scripts/sigma-renderers/commit.js"></script>
 
-        <script src="scripts/git-graph.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/zepto/1.1.4/zepto.min.js"></script>
+
+        <script src="http://coffeescript.org/extras/coffee-script.js"></script>
+        <script type="text/coffeescript" src="scripts/git-graph/sigma-node-import.coffee"></script>
+        <script type="text/coffeescript" src="scripts/git-graph/sigma-edge-import.coffee"></script>
+
+        <script type="text/coffeescript" src="scripts/sigma-renderers/edge.coffee"></script>
+        <script type="text/coffeescript" src="scripts/sigma-renderers/commit.coffee"></script>
+
+        <script type="text/coffeescript" src="scripts/git-graph.coffee"></script>
     </body>
 </html>

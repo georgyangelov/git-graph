@@ -17,5 +17,4 @@ gem install bundler
 # Go to vagrant dir
 cd /vagrant
 
-# Run `bundle install`
 bundle install
