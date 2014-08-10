@@ -4,10 +4,29 @@
         <title>Git Graph</title>
         <meta charset="utf-8">
 
+        <link rel="stylesheet" href="styles/loading.css">
         <link rel="stylesheet" href="styles/git-graph.css">
     </head>
     <body>
         <div id="container"></div>
+
+        <div id="loader">
+          <div class="shadow"></div>
+          <div id="portalcube">
+            <div class="squares">
+              <div class="box"></div>
+              <ul>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+              </ul>
+            </div>
+            <div class="circle">
+              <div class="heart"></div>
+            </div>
+          </div>
+        </div>
 
         <script src="scripts/sigmajs/sigma.min.js"></script>
         <script src="scripts/sigmajs/plugins/sigma.parsers.json.min.js"></script>

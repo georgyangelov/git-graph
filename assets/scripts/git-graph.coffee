@@ -44,6 +44,8 @@ class GitGraph
 
     @zoom_to @sigma.graph.nodes(labels.get_id('HEAD'))
 
+    document.getElementById('loader').remove()
+
   zoom_to: (node) ->
     camera = @sigma.cameras[0]
     prefix = camera.readPrefix
