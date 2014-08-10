@@ -21,17 +21,20 @@ class GitGraph
         nodesPowRatio: 0.9
         edgesPowRatio: 1
 
-  load: (url) ->
-    $.getJSON url, @import
+  load: ->
+    $.getJSON 'history.json', (history) =>
+      $.getJSON 'refs.json', (start_commits) =>
+        @import history, start_commits
 
-  import: (history) =>
-    nodes = new SigmaNodeImport(@sigma, history)
-    edges = new SigmaEdgeImport(@sigma, history)
+  import: (history, start_commits) =>
+    nodes = new SigmaNodeImport @sigma, history
+    edges = new SigmaEdgeImport @sigma, history
 
-    nodes.import 0, 0, config.step.x, config.step.y, Object.keys(history)[0]
-    edges.import 0, 0, config.step.x, config.step.y, Object.keys(history)[0]
+    console.log(start_commits)
+    nodes.import 0, 0, config.step.x, config.step.y, start_commits
+    edges.import 0, 0, config.step.x, config.step.y, start_commits
 
     @sigma.refresh()
 
 window.git_graph = new GitGraph document.getElementById('container')
-window.git_graph.load 'history.json'
+window.git_graph.load()

@@ -25,4 +25,27 @@ class GitGraph
       }]
     end.to_h
   end
+
+  def branches
+    @repository.branches.each_name(:local).to_a
+  end
+
+  def resolve_commits(references)
+    references.map do |reference|
+      if @repository.branches[reference]
+        object = @repository.lookup @repository.branches[reference].target_id
+      else
+        object = @repository.lookup reference
+      end
+
+      case object.type
+      when :commit
+        commit = object
+      when :tag
+        commit = Rugged::Commit.lookup @repository, target
+      end
+
+      commit.oid
+    end
+  end
 end
